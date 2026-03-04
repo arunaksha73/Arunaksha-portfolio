@@ -628,9 +628,14 @@
                                     let weeks = data.contributions;
                                     if (maxWeeks) weeks = weeks.slice(-maxWeeks);
 
-                                    // Build grid using inline styles (no Tailwind JIT needed)
+                                    // Build grid and calculate months
                                     let gridHtml = `<div style="display:flex;gap:${gapPx}px;">`;
-                                    weeks.forEach(week => {
+                                    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                                    let monthsHtml = `<div style="display:flex;margin-left:32px;margin-bottom:4px;font-size:9px;color:#94a3b8;font-weight:500;">`;
+                                    let currentMonth = -1;
+
+                                    weeks.forEach((week, i) => {
+                                        // Grid column
                                         gridHtml += `<div style="display:flex;flex-direction:column;gap:${gapPx}px;">`;
                                         week.forEach(day => {
                                             const bg = day.contributionCount > 0
@@ -640,12 +645,25 @@
                                             gridHtml += `<div title="${title}" class="cursor-help transition-transform duration-150 hover:scale-[2] hover:z-10 hover:relative" style="width:${cellPx}px;height:${cellPx}px;background:${bg};border-radius:2px;"></div>`;
                                         });
                                         gridHtml += '</div>';
+
+                                        // Month labels
+                                        const weekDate = new Date(week[0].date);
+                                        const month = weekDate.getMonth();
+                                        if (month !== currentMonth) {
+                                            if (i > 0) {
+                                                monthsHtml += `<div style="width:${4 * (cellPx + gapPx)}px;flex-shrink:0;">${monthNames[month]}</div>`;
+                                            } else {
+                                                monthsHtml += `<div style="width:0;flex-shrink:0;overflow:visible;">${monthNames[month]}</div>`;
+                                            }
+                                            currentMonth = month;
+                                        }
                                     });
                                     gridHtml += '</div>';
+                                    monthsHtml += `</div>`;
 
                                     // Day-of-week labels
                                     const labelsHtml = `
-                                        <div style="display:flex;flex-direction:column;justify-content:space-between;height:${labelH}px;padding-right:6px;font-size:9px;color:#94a3b8;font-weight:500;padding-bottom:1px;flex-shrink:0;">
+                                        <div style="display:flex;flex-direction:column;justify-content:space-between;height:${labelH}px;padding-right:6px;font-size:9px;color:#94a3b8;font-weight:500;padding-bottom:1px;flex-shrink:0;margin-top:2px;">
                                             <span style="visibility:hidden;">Sun</span>
                                             <span>Mon</span>
                                             <span style="visibility:hidden;">Tue</span>
@@ -655,7 +673,7 @@
                                             <span style="visibility:hidden;">Sat</span>
                                         </div>`;
 
-                                    graphContainer.innerHTML = `<div style="display:inline-flex;padding:4px 8px;">${labelsHtml}${gridHtml}</div>`;
+                                    graphContainer.innerHTML = `<div style="display:inline-block;padding:4px 8px;">${monthsHtml}<div style="display:flex;">${labelsHtml}${gridHtml}</div></div>`;
 
                                     // Always show the most-recent (rightmost) weeks first
                                     graphContainer.scrollLeft = graphContainer.scrollWidth;
