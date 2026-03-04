@@ -601,15 +601,23 @@
                     shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_4px_20px_rgba(0,0,0,0.06)]
                     dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_4px_20px_rgba(0,0,0,0.3)]
                     p-5 backdrop-blur-md">
-                    <div class="w-full overflow-x-auto overflow-y-hidden pb-4 pt-2" id="github-graph-container"></div>
+                    <div class="w-full overflow-x-auto overflow-y-hidden pb-3 pt-1" id="github-graph-container"
+                        style="-webkit-overflow-scrolling:touch;"></div>
                     <script>
                         document.addEventListener('DOMContentLoaded', () => {
                             const graphContainer = document.getElementById('github-graph-container');
                             const username = 'arunaksha73';
                             const apiUrl = `https://github-contributions-api.deno.dev/${username}.json`;
 
+                            // Responsive config
+                            const isMobile = window.innerWidth < 640;
+                            const cellPx = isMobile ? 9 : 11;
+                            const gapPx = 1;
+                            const maxWeeks = isMobile ? 26 : null; // null = all
+                            const labelH = (7 * cellPx) + (6 * gapPx); // exact pixel height
+
                             // Show spinner
-                            graphContainer.innerHTML = '<div class="flex items-center justify-center h-32 w-full"><span class="material-symbols-outlined animate-spin text-green-500 text-3xl">autorenew</span></div>';
+                            graphContainer.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:' + labelH + 'px;"><span class="material-symbols-outlined animate-spin text-green-500 text-3xl">autorenew</span></div>';
 
                             fetch(apiUrl)
                                 .then(res => {
@@ -617,39 +625,44 @@
                                     return res.json();
                                 })
                                 .then(data => {
-                                    const weeks = data.contributions;
-                                    let gridHtml = '<div class="flex gap-[1px]">';
+                                    let weeks = data.contributions;
+                                    if (maxWeeks) weeks = weeks.slice(-maxWeeks);
 
+                                    // Build grid using inline styles (no Tailwind JIT needed)
+                                    let gridHtml = `<div style="display:flex;gap:${gapPx}px;">`;
                                     weeks.forEach(week => {
-                                        gridHtml += '<div class="flex flex-col gap-[1px]">';
+                                        gridHtml += `<div style="display:flex;flex-direction:column;gap:${gapPx}px;">`;
                                         week.forEach(day => {
-                                            let customClass = day.contributionCount === 0 ? 'bg-[#ebedf0]/50 dark:bg-white/5' : '';
-                                            let inlineStyle = day.contributionCount > 0 ? `background-color: ${day.color};` : '';
-
-                                            gridHtml += `<div title="${day.contributionCount} contributions on ${day.date}" class="w-[11px] h-[11px] rounded-[2px] cursor-help hover:scale-[2.2] hover:z-10 hover:relative transition-all duration-200 ${customClass}" style="${inlineStyle}"></div>`;
+                                            const bg = day.contributionCount > 0
+                                                ? day.color
+                                                : (document.documentElement.classList.contains('dark') ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.08)');
+                                            const title = `${day.contributionCount} contribution${day.contributionCount !== 1 ? 's' : ''} on ${day.date}`;
+                                            gridHtml += `<div title="${title}" class="cursor-help transition-transform duration-150 hover:scale-[2] hover:z-10 hover:relative" style="width:${cellPx}px;height:${cellPx}px;background:${bg};border-radius:2px;"></div>`;
                                         });
                                         gridHtml += '</div>';
                                     });
                                     gridHtml += '</div>';
 
-                                    // Create simple left-axis labels
+                                    // Day-of-week labels
                                     const labelsHtml = `
-                                        <div class="flex flex-col justify-between text-[10px] text-slate-400 dark:text-slate-500 font-medium pb-1 pr-2 h-[83px]">
-                                            <div class="invisible">Sun</div>
-                                            <div>Mon</div>
-                                            <div class="invisible">Tue</div>
-                                            <div>Wed</div>
-                                            <div class="invisible">Thu</div>
-                                            <div>Fri</div>
-                                            <div class="invisible">Sat</div>
-                                        </div>
-                                    `;
+                                        <div style="display:flex;flex-direction:column;justify-content:space-between;height:${labelH}px;padding-right:6px;font-size:9px;color:#94a3b8;font-weight:500;padding-bottom:1px;flex-shrink:0;">
+                                            <span style="visibility:hidden;">Sun</span>
+                                            <span>Mon</span>
+                                            <span style="visibility:hidden;">Tue</span>
+                                            <span>Wed</span>
+                                            <span style="visibility:hidden;">Thu</span>
+                                            <span>Fri</span>
+                                            <span style="visibility:hidden;">Sat</span>
+                                        </div>`;
 
-                                    graphContainer.innerHTML = `<div class="flex justify-center min-w-max mx-auto px-4 py-2">${labelsHtml}${gridHtml}</div>`;
+                                    graphContainer.innerHTML = `<div style="display:inline-flex;padding:4px 8px;">${labelsHtml}${gridHtml}</div>`;
+
+                                    // Always show the most-recent (rightmost) weeks first
+                                    graphContainer.scrollLeft = graphContainer.scrollWidth;
                                 })
                                 .catch(err => {
-                                    // Fallback to image on failure
-                                    graphContainer.innerHTML = `<img src="https://ghchart.rshah.org/${username}" class="min-w-[700px] h-auto dark:opacity-85 block mx-auto mt-4 rounded-xl">`;
+                                    // Responsive fallback image
+                                    graphContainer.innerHTML = `<img src="https://ghchart.rshah.org/${username}" class="w-full h-auto dark:opacity-85 block mx-auto mt-3 rounded-xl" style="min-width:280px;">`;
                                 });
                         });
                     </script>
