@@ -1094,7 +1094,8 @@
 
                 <!-- Form Area -->
                 <div class="p-8 pt-4 relative z-10">
-                    <form id="feedback-form" class="flex flex-col gap-5">
+                    <form id="feedback-form" class="flex flex-col gap-5"
+                        action="https://formsubmit.co/arunaksha73@gmail.com" method="POST" target="_blank">
                         <!-- FormSubmit config — no signup needed, just confirm the one-time activation email -->
                         <input type="hidden" name="_subject" value="⭐ New Portfolio Feedback!">
                         <input type="hidden" name="_captcha" value="false">
@@ -1121,15 +1122,23 @@
                                     class="material-symbols-outlined cursor-pointer text-4xl text-slate-200 dark:text-slate-700 hover:text-yellow-400 dark:hover:text-yellow-400 hover:scale-110 star transition-all duration-300"
                                     data-value="5">star_rate</span>
                             </div>
-                            <input type="hidden" id="rating-value" value="0">
+                            <input type="hidden" id="rating-value" name="rating" value="Not rated">
                         </div>
 
-                        <!-- Customized Input -->
                         <div class="relative group mt-2">
                             <label
                                 class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1 ml-1">Your
                                 Name</label>
                             <input type="text" id="feedback-name" name="name" required placeholder="Type your name"
+                                class="w-full bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all backdrop-blur-sm placeholder:text-slate-300 dark:placeholder:text-slate-600">
+                        </div>
+
+                        <!-- Email Input -->
+                        <div class="relative group">
+                            <label
+                                class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1 ml-1">Your
+                                Email</label>
+                            <input type="email" id="feedback-email" name="email" required placeholder="your@email.com"
                                 class="w-full bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all backdrop-blur-sm placeholder:text-slate-300 dark:placeholder:text-slate-600">
                         </div>
 
@@ -1295,51 +1304,10 @@
                 });
             });
 
-            feedbackForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const btn = feedbackForm.querySelector('button[type="submit"]');
-                const originalHtml = btn.innerHTML;
-                btn.innerHTML = '<span class="material-symbols-outlined text-sm inline-block align-middle mr-2" style="animation: spin 1s linear infinite;">autorenew</span>Sending...';
-                btn.disabled = true;
-
-                const formData = new FormData(feedbackForm);
-                formData.append('rating', ratingValue.value + ' Stars');
-
-                try {
-                    const response = await fetch('https://formsubmit.co/ajax/Arunaksha73@gmail.com', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                        body: JSON.stringify({
-                            name: formData.get('name'),
-                            message: formData.get('message'),
-                            rating: ratingValue.value + ' Stars',
-                            _subject: '⭐ New Portfolio Feedback!',
-                            _captcha: 'false'
-                        })
-                    });
-
-                    if (response.ok) {
-                        feedbackSuccess.classList.remove('hidden');
-                        feedbackForm.reset();
-                        stars.forEach(s => {
-                            s.classList.remove('text-yellow-400');
-                            s.classList.add('text-slate-300', 'dark:text-slate-600');
-                        });
-                        ratingValue.value = 0;
-
-                        setTimeout(() => {
-                            feedbackSuccess.classList.add('hidden');
-                            closeFeedbackModal();
-                        }, 3000);
-                    } else {
-                        alert("Form sent conceptually. Add real Access Key to get emails.");
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                } finally {
-                    btn.innerHTML = originalHtml;
-                    btn.disabled = false;
-                }
+            // On submit: stamp the star rating into the hidden field, then let the browser POST natively
+            feedbackForm.addEventListener('submit', (e) => {
+                const stars_val = ratingValue.value;
+                ratingValue.value = stars_val === 'Not rated' ? 'Not rated' : stars_val + ' ⭐';
             });
             // ======== Scroll Reveal Logic ========
             function revealOnScroll() {
