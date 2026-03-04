@@ -618,15 +618,15 @@
                                 })
                                 .then(data => {
                                     const weeks = data.contributions;
-                                    let gridHtml = '<div class="flex gap-[3px]">';
+                                    let gridHtml = '<div class="flex gap-[2px]">';
 
                                     weeks.forEach(week => {
-                                        gridHtml += '<div class="flex flex-col gap-[3px]">';
+                                        gridHtml += '<div class="flex flex-col gap-[2px]">';
                                         week.forEach(day => {
                                             let customClass = day.contributionCount === 0 ? 'bg-[#ebedf0]/50 dark:bg-white/5' : '';
                                             let inlineStyle = day.contributionCount > 0 ? `background-color: ${day.color};` : '';
 
-                                            gridHtml += `<div title="${day.contributionCount} contributions on ${day.date}" class="w-[14px] h-[14px] rounded-[3px] cursor-help hover:scale-[1.6] transition-all duration-300 ${customClass}" style="${inlineStyle}"></div>`;
+                                            gridHtml += `<div title="${day.contributionCount} contributions on ${day.date}" class="w-[10px] h-[10px] rounded-[2px] cursor-help hover:scale-[2] transition-all duration-300 ${customClass}" style="${inlineStyle}"></div>`;
                                         });
                                         gridHtml += '</div>';
                                     });
@@ -634,7 +634,7 @@
 
                                     // Create simple left-axis labels
                                     const labelsHtml = `
-                                        <div class="flex flex-col justify-between text-[11px] text-slate-400 dark:text-slate-500 font-medium pb-1 pr-3 h-[116px]">
+                                        <div class="flex flex-col justify-between text-[10px] text-slate-400 dark:text-slate-500 font-medium pb-1 pr-3 h-[82px]">
                                             <div class="invisible">Sun</div>
                                             <div>Mon</div>
                                             <div class="invisible">Tue</div>
@@ -912,7 +912,7 @@
 
                 <!-- Resume Download button -->
                 <div class="relative z-10">
-                    <a href="./Profile_260228_210701.pdf" download class="group relative inline-flex items-center gap-3 px-7 py-4 rounded-2xl overflow-hidden
+                    <a href="resume01111.png" download class="group relative inline-flex items-center gap-3 px-7 py-4 rounded-2xl overflow-hidden
                         bg-white/60 dark:bg-white/[0.04]
                         border border-white/75 dark:border-white/[0.06]
                         shadow-[0_6px_24px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.9)]
