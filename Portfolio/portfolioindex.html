@@ -631,7 +631,7 @@
                                     // Build grid and calculate months
                                     let gridHtml = `<div style="display:flex;gap:${gapPx}px;">`;
                                     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                                    let monthsHtml = `<div style="display:flex;margin-left:32px;margin-bottom:4px;font-size:9px;color:#94a3b8;font-weight:500;">`;
+                                    let monthsHtml = `<div style="position:relative;height:12px;margin-left:32px;margin-bottom:4px;font-size:9px;color:#94a3b8;font-weight:500;">`;
                                     let currentMonth = -1;
 
                                     weeks.forEach((week, i) => {
@@ -646,15 +646,12 @@
                                         });
                                         gridHtml += '</div>';
 
-                                        // Month labels
+                                        // Month labels - Absolute position based on week index
                                         const weekDate = new Date(week[0].date);
                                         const month = weekDate.getMonth();
                                         if (month !== currentMonth) {
-                                            if (i > 0) {
-                                                monthsHtml += `<div style="width:${4 * (cellPx + gapPx)}px;flex-shrink:0;">${monthNames[month]}</div>`;
-                                            } else {
-                                                monthsHtml += `<div style="width:0;flex-shrink:0;overflow:visible;">${monthNames[month]}</div>`;
-                                            }
+                                            const offset = i * (cellPx + gapPx);
+                                            monthsHtml += `<div style="position:absolute;left:${offset}px;white-space:nowrap;">${monthNames[month]}</div>`;
                                             currentMonth = month;
                                         }
                                     });
