@@ -940,7 +940,7 @@
 
                 <!-- Resume View button -->
                 <div class="relative z-10">
-                    <button onclick="openResume()" class="group relative inline-flex items-center gap-3 px-7 py-4 rounded-2xl overflow-hidden
+                    <button id="resume-open-btn" class="group relative inline-flex items-center gap-3 px-7 py-4 rounded-2xl overflow-hidden
                         bg-white/60 dark:bg-white/[0.04]
                         border border-white/75 dark:border-white/[0.06]
                         shadow-[0_6px_24px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.9)]
@@ -1367,7 +1367,7 @@
           color:#1a1814;
       ">
             <!-- Back button (left) -->
-            <button onclick="closeResume()" style="
+            <button id="resume-close-btn" style="
             position:absolute;top:20px;left:20px;
             background:#2d2a26;color:#f5f3ef;
             border:none;border-radius:8px;
@@ -1381,7 +1381,7 @@
         " onmouseover="this.style.background='#444038'" onmouseout="this.style.background='#2d2a26'">← Back</button>
 
             <!-- Print button (right) -->
-            <button onclick="window.print()" style="
+            <button id="resume-print-btn" style="
             position:absolute;top:20px;right:20px;
             background:#f5f3ef;color:#2d2a26;
             border:1px solid #d8d4cc;border-radius:8px;
@@ -1586,7 +1586,7 @@
     <script>
         function openResume() {
             const overlay = document.getElementById('resume-overlay');
-            overlay.style.display = 'block';
+            if (overlay) overlay.style.display = 'block';
             document.body.style.overflow = 'hidden';
             // Load Google Fonts for resume if not already present
             if (!document.getElementById('resume-fonts')) {
@@ -1599,9 +1599,22 @@
         }
         function closeResume() {
             const overlay = document.getElementById('resume-overlay');
-            overlay.style.display = 'none';
+            if (overlay) overlay.style.display = 'none';
             document.body.style.overflow = '';
         }
+
+        // Attach event listeners when DOM loads to avoid Content Security Policy (CSP) conflicts
+        document.addEventListener('DOMContentLoaded', function () {
+            const openBtn = document.getElementById('resume-open-btn');
+            if (openBtn) openBtn.addEventListener('click', openResume);
+
+            const closeBtn = document.getElementById('resume-close-btn');
+            if (closeBtn) closeBtn.addEventListener('click', closeResume);
+
+            const printBtn = document.getElementById('resume-print-btn');
+            if (printBtn) printBtn.addEventListener('click', function () { window.print(); });
+        });
+
         // Close on backdrop click
         document.getElementById('resume-overlay').addEventListener('click', function (e) {
             if (e.target === this) closeResume();
