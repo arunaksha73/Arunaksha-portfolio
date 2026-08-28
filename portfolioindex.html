@@ -5,13 +5,43 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta name="google-site-verification" content="fL3ISdkzf5sCihKzXCsBVYUzgxInI8jAG_nL0YUgq7c" />
     <title>Arunaksha Das|Digital Scrapbook</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- FOUC Fix: preconnect + preload fonts before render -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap" />
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" />
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&amp;display=swap"
         rel="stylesheet" />
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
+    <!-- Hide body until fonts + icons are ready to prevent FOUC -->
+    <style>
+        body {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        body.ready {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+    <script>
+        // Apply saved dark mode before paint to avoid flash
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+        // Show body after fonts load (or after 1.5s timeout fallback)
+        var _t = setTimeout(function () { document.body && document.body.classList.add('ready'); }, 1500);
+        document.fonts.ready.then(function () { clearTimeout(_t); document.body && document.body.classList.add('ready'); });
+    </script>
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -310,9 +340,9 @@
                     <div class="paperclip bg-slate-200 dark:bg-slate-700"></div>
                     <div class="polaroid rotate-3 hover:rotate-0 transition-transform duration-500 cursor-pointer">
                         <img alt="Portrait of Arunaksha Das"
-                            class="w-64 h-80 object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                            data-alt="Professional portrait of a developer smiling"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlKKtAjEZDSePXDo782SM7dBLlwUKl3xQKTSSyhKK8u1kg7s8S04IvmtpfspdGo3JOzKOX-gbv3zIR8CVlE34S74n2IvnR8N-4qWwndYoCTiSmCnoCrBGzK8EztTgE4IegoODDbofDC7LWin8hhlZbjGpEayW0Fl0TMcnrft62qORaSFfoifbEetnIiG6VvOdaJtZVpopdKyBbfwctUUFK7OqZwJXg5c4zVQMOTGlFSJaIrMoNZX7GYWrVVhJmXhaOgu4MBfcD26o" />
+                            class="w-64 h-80 object-cover object-bottom grayscale hover:grayscale-0 transition-all duration-700"
+                            data-alt="Portrait of Arunaksha Das"
+                            src="./20260630_134632.jpg" />
                         <p class="mt-4 text-center font-medium text-slate-500 text-sm italic">Arunaksha Das, 2026</p>
                     </div>
                 </div>
@@ -1392,7 +1422,8 @@
             font-weight:500;
             box-shadow:0 4px 16px rgba(45,42,38,0.06);
             transition:border-color 0.2s,transform 0.15s;
-        " onmouseover="this.style.borderColor='#2d2a26'" onmouseout="this.style.borderColor='#d8d4cc'">⬇ Download</button>
+        " onmouseover="this.style.borderColor='#2d2a26'" onmouseout="this.style.borderColor='#d8d4cc'">⬇
+                Download</button>
 
             <!-- HEADER -->
             <div style="border-bottom:1px solid #d8d4cc;padding-bottom:40px;margin-bottom:48px;">
@@ -1496,22 +1527,29 @@
                         gradient effects, a countdown timer, and a fully responsive design — celebrating the festival of
                         colors through dynamic web design.</p>
                 </div>
-                <div style="background:#fff;border:1px solid #d8d4cc;border-radius:8px;padding:20px 24px;margin-bottom:12px;">
+                <div
+                    style="background:#fff;border:1px solid #d8d4cc;border-radius:8px;padding:20px 24px;margin-bottom:12px;">
                     <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:8px;">
                         Aura Task Management</div>
                     <p style="font-size:0.85rem;line-height:1.65;color:#6a6660;">Developed Aura, a task management
                         website designed to help users organize daily activities, manage tasks efficiently, and improve
                         productivity with a simple and user-friendly interface.</p>
                 </div>
-                <div style="background:#fff;border:1px solid #d8d4cc;border-radius:8px;padding:20px 24px;margin-bottom:12px;">
+                <div
+                    style="background:#fff;border:1px solid #d8d4cc;border-radius:8px;padding:20px 24px;margin-bottom:12px;">
                     <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:8px;">
                         Atmos Weather</div>
-                    <p style="font-size:0.85rem;line-height:1.65;color:#6a6660;">Lightweight weather client built with vanilla JS, featuring real-time API data, responsive glass UI, and location-aware forecasting. Optimized for performance and clean UX.</p>
+                    <p style="font-size:0.85rem;line-height:1.65;color:#6a6660;">Lightweight weather client built with
+                        vanilla JS, featuring real-time API data, responsive glass UI, and location-aware forecasting.
+                        Optimized for performance and clean UX.</p>
                 </div>
                 <div style="background:#fff;border:1px solid #d8d4cc;border-radius:8px;padding:20px 24px;">
                     <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:8px;">
                         TechBoard — Digital Teaching Board</div>
-                    <p style="font-size:0.85rem;line-height:1.65;color:#6a6660;">I built TechBoard to make teaching feel a bit more natural online. It works like a simple classroom board where you can draw, write, and explain things easily — just without the physical board. The focus was to keep everything clean, smooth, and easy to use, so anyone can jump in and start teaching without confusion.</p>
+                    <p style="font-size:0.85rem;line-height:1.65;color:#6a6660;">I built TechBoard to make teaching feel
+                        a bit more natural online. It works like a simple classroom board where you can draw, write, and
+                        explain things easily — just without the physical board. The focus was to keep everything clean,
+                        smooth, and easy to use, so anyone can jump in and start teaching without confusion.</p>
                 </div>
             </div>
             <!-- EDUCATION -->
@@ -1635,18 +1673,18 @@
                 const element = document.querySelector('#resume-overlay > div');
 
                 const opt = {
-                    margin:       [10, 10, 10, 10],
-                    filename:     'Arunaksha_Das_Resume.pdf',
-                    image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { 
-                        scale: 2, 
-                        useCORS: true, 
+                    margin: [10, 10, 10, 10],
+                    filename: 'Arunaksha_Das_Resume.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: {
+                        scale: 2,
+                        useCORS: true,
                         windowWidth: 860,
                         ignoreElements: (node) => {
                             return node.id === 'resume-close-btn' || node.id === 'resume-download-btn';
                         }
                     },
-                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };
 
                 html2pdf().set(opt).from(element).save().then(() => {
